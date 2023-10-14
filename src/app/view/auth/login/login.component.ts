@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -13,7 +14,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: Router,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
   ngOnInit(): void {
     this.createForm();
@@ -39,12 +41,14 @@ export class LoginComponent implements OnInit {
           let accessToken =
             'Basic ' + btoa(params.Username + ':' + params.Password);
           localStorage.setItem('accessToken', accessToken);
+          this.toastr.success('Login Successfully')
           this.route.navigate(['/mytask']);
+
         } else if (res.userDetail.Status != 200) {
         }
       },
       (err) => {
-        alert('Something went wrong');
+        this.toastr.error('Something went wrong');
       }
     );
   }

@@ -12,12 +12,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './core/guards/authenticate.guard';
 import { ReverseGuard } from './core/guards/reverse.guard';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     CommonModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      
+
+    }
+      
+    ),
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularMaterialModule,
@@ -25,7 +34,7 @@ import { ReverseGuard } from './core/guards/reverse.guard';
     HttpClientModule,
     FormsModule,
   ],
-  providers: [AuthGuard,ReverseGuard],
+  providers: [AuthGuard,ReverseGuard,ToastrService,ServiceInterceptor],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/shared/services/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,7 @@ export class LoginComponent implements OnInit {
     };
 
     this.authService.login(params.Username, params.Password).subscribe(
-      (res) => {
+      (res:any) => {
         if (res.userDetail.Status == 200) {
           let accessToken =
             'Basic ' + btoa(params.Username + ':' + params.Password);
@@ -47,8 +48,8 @@ export class LoginComponent implements OnInit {
         } else if (res.userDetail.Status != 200) {
         }
       },
-      (err) => {
-        this.toastr.error('Something went wrong');
+      (err:any) => {
+        alert('Something went wrong');
       }
     );
   }

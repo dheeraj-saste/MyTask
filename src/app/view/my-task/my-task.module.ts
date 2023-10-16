@@ -6,6 +6,11 @@ import { AngularMaterialModule } from 'src/app/Angular-Material/angular-material
 import { DeleteTaskDialogComponent } from './delete-task-dialog/delete-task-dialog.component';
 import { EditTaskDialogComponent } from './edit-task-dialog/edit-task-dialog.component';
 import { TaskListComponent } from './task-list/task-list.component';
+import { CoreModule } from 'src/app/core/core.module';
+import { HttpClientModule } from '@angular/common/http';
+import { AddUserDialogComponent } from './edit-task-dialog/add-user-dialog/add-user-dialog.component';
+import { DatePipe } from 'src/app/core/pipes/date.pipe';
+import { MyTaskService } from 'src/app/shared/services/my-task.service';
 
 const route: Route[] = [
   {
@@ -19,13 +24,16 @@ const route: Route[] = [
     TaskListComponent,
     EditTaskDialogComponent,
     DeleteTaskDialogComponent,
+    AddUserDialogComponent,
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(route),
     AngularMaterialModule,
     ReactiveFormsModule,
+    HttpClientModule,
+    CoreModule,
   ],
-  exports: [AngularMaterialModule],
+  providers: [MyTaskService,DatePipe],
 })
 export class MyTaskModule {}

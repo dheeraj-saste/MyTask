@@ -21,7 +21,7 @@
     <div>
       <form [formGroup]="loginForm" class="loginform">
         <mat-form-field class="mt-3 ">
-          <input matInput type="text" placeholder="Email" formControlName="userName" />
+          <input matInput type="text" placeholder="Mobile No " formControlName="userName" appNumberOnly />
           <mat-error>Please enter <strong>name</strong></mat-error>
         </mat-form-field>
         <mat-form-field  class="mt-3">

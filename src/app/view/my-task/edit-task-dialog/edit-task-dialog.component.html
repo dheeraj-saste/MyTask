@@ -1,1 +1,71 @@
-<p>edit-task-dialog works!</p>
+<div mat-dialog-title class="">Add Task</div>
+<span> <i class="fa fa-window-close"></i> </span>
+<div class="d-flex justify-content-between"></div>
+
+<mat-dialog-content>
+  <div class="container">
+    <div class="row">
+      <form [formGroup]="editForm">
+        <mat-form-field class="mb-3 col-12">
+          <mat-label>Title*</mat-label>
+          <input matInput type="text" formControlName="title" />
+        </mat-form-field>
+        <mat-form-field class="mb-3 col-12">
+          <mat-label>Description*</mat-label>
+          <input matInput type="text" formControlName="description" />
+        </mat-form-field>
+        <mat-form-field class="mb-3 col-12">
+          <mat-label>Attach File*</mat-label>
+          <input matInput (click)="openFiles()" [value]="imageName" readonly />
+          <input formControlName="Images" hidden />
+          <input
+            type="file"
+            #fileInput
+            accept="image/*"
+            (change)="handleFileSelect($event.target)"
+            hidden
+          />
+        </mat-form-field>
+        <div class="d-flex justify-content-between">
+          <mat-form-field class="mb-3 col-5">
+            <mat-label>Lead/Customer Name*</mat-label>
+            <input matInput type="text" formControlName="customerName" />
+          </mat-form-field>
+          <mat-form-field class="mb-3 col-5">
+            <mat-label>Select Due Date*</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="date"
+              [matDatepicker]="datepicker"
+              [min]="currentDate"
+              (click)="datepicker.open()"
+              readonly
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="datepicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #datepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <mat-form-field class="mb-3 col-5">
+          <mat-label>Select Priority</mat-label>
+          <input matInput type="text" formControlName="priority" />
+        </mat-form-field>
+        <mat-form-field class="mb-3 col-12">
+          <mat-label>Add Users*</mat-label>
+          <input matInput type="text" (click)="addUser()" formControlName="users" readonly />
+        </mat-form-field>
+        <mat-form-field class="mb-3 col-12">
+          <mat-label>Add CC Members</mat-label>
+          <input matInput type="text" formControlName="ccMembers" readonly />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex align-items-center justify-content-end">
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button class="mr-2" color="primary">Save</button>
+</mat-dialog-actions>

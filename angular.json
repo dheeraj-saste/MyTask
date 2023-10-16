@@ -8,7 +8,8 @@
       "schematics": {
         "@schematics/angular:component": {
           "skipTests": true
-        },"@schematics/angular:directive": {
+        },
+        "@schematics/angular:directive": {
           "skipTests": true
         },
         "@schematics/angular:guard": {
@@ -19,7 +20,8 @@
         },
         "@schematics/angular:service": {
           "skipTests": true
-        }, "@schematics/angular:interceptor": {
+        },
+        "@schematics/angular:interceptor": {
           "skipTests": true
         }
       },
@@ -78,6 +80,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "My_Task:build",
+            "proxyConfig": "./src/proxy/myTask.config.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "My_Task:build:production"

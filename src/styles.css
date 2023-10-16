@@ -2,3 +2,13 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* mat-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled){
+    background-color: #fff;
+}
+mat-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) :hover{
+    background-color: #fff;
+}
+mat-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) :active{
+    background-color: #fff;
+} */

@@ -4,6 +4,7 @@ import { Route, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AngularMaterialModule } from 'src/app/Angular-Material/angular-material.module';
 import { LoginComponent } from './login/login.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 const route: Route[] = [
   {
@@ -34,6 +35,7 @@ const route: Route[] = [
     RouterModule.forChild(route),
     AngularMaterialModule,
     ToastrModule,
+    CoreModule,
   ],
   providers: [ToastrService],
 })

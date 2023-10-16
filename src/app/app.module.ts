@@ -13,8 +13,10 @@ import { ReverseGuard } from './core/guards/reverse.guard';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
 
+
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,  ],
   imports: [
     BrowserModule,
     CommonModule,
@@ -28,6 +30,7 @@ import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
     HttpClientModule,
     FormsModule,
   ],
+  exports:[AngularMaterialModule],
   providers: [
     AuthGuard,
     ReverseGuard,

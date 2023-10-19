@@ -1,8 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DatePipe } from 'src/app/core/pipes/date.pipe';
+import { DatePipe } from '@angular/common';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { MyTaskService } from 'src/app/shared/services/my-task.service';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -11,45 +13,63 @@ import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.compon
 })
 export class EditTaskDialogComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
-
+  @ViewChild('datepicker') datepicker!: MatDatepicker<Date>;
+  leadList: any;
   editForm!: FormGroup;
-  constructor(private formBuilder: FormBuilder ,private datepipe:DatePipe,private dialog :MatDialog) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private datepipe: DatePipe,
+    private dialog: MatDialog,
+    private taskService: MyTaskService
+  ) {}
   currentDate: any = new Date();
+  selectedDate: any = '';
   imageName: any = '';
+  leadParams = {
+    From: 1,
+    To: -1,
+    Text: '',
+  };
 
   ngOnInit(): void {
+    this.getLeadList();
+    this.createForm();
+
+    // this.editForm.get('date')?.valueChanges.subscribe((res) => {
+    //   let date: any = new Date(res);
+    //   if (res == '') {
+    //     return;
+    //   } else {
+    //     this.selectedDate = this.datepipe.transform(date, 'dd MMM yyyy');
+    //     console.log(res);
+    //     console.log(this.selectedDate);
+
+    //     // console.log(res);
+    //   }
+    // });
+  }
+  createForm() {
     this.editForm = this.formBuilder.group({
-      title: ['', Validators.pattern('^[a-zA-Z]{1,19}$')],
-      description: [''],
+      Title: ['', Validators.pattern('^[a-zA-Z]{1,19}$')],
+      Description: [''],
       Images: [''],
-      customerName: [''],
-      date: [''],
-      priority: [''],
-      users: [''],
+      CustomerName: [''],
+      Date: [''],
+      Priority: [''],
+      Users: [''],
       ccMembers: [''],
     });
-
-    this.editForm.get('date')?.valueChanges.subscribe((res) => {
-      
-      if (res = '') {
-        return; 
-        
-      } else {
-        
-        let date = this.datepipe.transform(res, 'dd/MMM/yyyy')
-        console.log(date);
-        
-        this.editForm.get('date')?.patchValue(date);
-        console.log(res);
-      }
-        
-        
+  }
+  closeDatepicker() {
+    this.datepicker.close();
+  }
+  getLeadList() {
+    this.taskService.getLeadList(this.leadParams).subscribe((res: any) => {
+      console.log(res);
     });
   }
   addUser() {
-
-    const dialog = this.dialog.open(AddUserDialogComponent);
-    
+    const dialog = this.dialog.open(AddUserDialogComponent,{height:'89vh',width:'60vh'});
   }
 
   openFiles() {
@@ -83,5 +103,8 @@ export class EditTaskDialogComponent implements OnInit {
     let mb = value / 1024 / 1024;
     console.log(mb, 'to mb');
     return mb;
+  }
+  onSubmit() {
+    console.log(this.editForm.controls['Date'].value);
   }
 }

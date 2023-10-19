@@ -12,3 +12,7 @@ mat-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) :hover{
 mat-form-field .mdc-text-field--filled:not(.mdc-text-field--disabled) :active{
     background-color: #fff;
 } */
+::ng-deep .mat-mdc-raised-button.mat-primary{
+    --mdc-protected-button-container-color: #5d78ff;
+    --mdc-protected-button-label-text-color: #fff;
+}

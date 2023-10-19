@@ -13,4 +13,11 @@ export class MyTaskService {
       .get('api/CompanyMembers?from=' + from + '&text=' + text + '&to=' + to)
       .pipe(map((res) => res));
   }
+  getTasksAssignedByMe(data: any): Observable<any> {
+    return this.http.post('api/Task/UserTasksAssignedByMe', data).pipe(map((res) => res));
+  }
+
+  getLeadList(params: any): Observable<any> {
+    return this.http.post<any>('api/CRM/Leads', params).pipe(map((res) => res));
+  }
 }

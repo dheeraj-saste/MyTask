@@ -1,11 +1,8 @@
-:host ::ng-deep .mdc-dialog__title {
+ ::ng-deep .mdc-dialog__title {
   border-bottom: 1px solid grey;
 }
 
-::ng-deep button .mat-mdc-raised-button:not(:disabled) {
-  background-color: #5d78ff;
-}
-::ng-deep .mat-mdc-raised-button.mat-primary{
-    --mdc-protected-button-container-color: #5d78ff;
-    --mdc-protected-button-label-text-color: #fff;
+:host ::ng-deep .mat-mdc-tab-label-container{
+
+  margin-bottom: 2em;
 }

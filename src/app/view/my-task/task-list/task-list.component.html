@@ -1,6 +1,58 @@
+<app-header></app-header>
+<div class="container">
+  <div class="top-header">
+    <div>
+      <mat-form-field class="mr12">
+        <mat-label>Search</mat-label>
+        <input matInput #search type="text" />
+      </mat-form-field>
 
-<p>task-list works!</p>
-<button (click)="EditTask()">Add Task</button>
+      <button mat-raised-button color="primary" (click)="EditTask()">
+        Add Task
+      </button>
+    </div>
+  </div>
+  <!-- <br> -->
 
+  <div class="row">
+    <div class="col-12">
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="Title">
+          <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.Title }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="CustomerName">
+          <mat-header-cell *matHeaderCellDef> Customer Name </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element?.LeadName }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="AssignedBy">
+          <mat-header-cell *matHeaderCellDef> Assigned By </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.AssignedByUserName }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="AssignedDate">
+          <mat-header-cell *matHeaderCellDef> Assigned Date </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.CreateDate }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="DueDate">
+          <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.TaskEndDate }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Priority">
+          <mat-header-cell *matHeaderCellDef> Priority </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.Priority }} </mat-cell>
+        </ng-container>
 
-<button (click)="clear()">logout</button>
+        <ng-container matColumnDef="Status">
+          <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.TaskStatus }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Action">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.Title }} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+</div>

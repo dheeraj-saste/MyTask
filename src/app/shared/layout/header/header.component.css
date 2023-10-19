@@ -1,0 +1,14 @@
+
+  .header{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bg-color{
+    background-color: antiquewhite;
+  }
+  ::ng-deep .mat-mdc-raised-button.mat-primary{
+    --mdc-protected-button-container-color: #5d78ff;
+    --mdc-protected-button-label-text-color: #fff;
+}

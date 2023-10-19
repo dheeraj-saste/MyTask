@@ -5,6 +5,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AngularMaterialModule } from 'src/app/Angular-Material/angular-material.module';
 import { LoginComponent } from './login/login.component';
 import { CoreModule } from 'src/app/core/core.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 const route: Route[] = [
   {
@@ -35,6 +36,7 @@ const route: Route[] = [
     RouterModule.forChild(route),
     AngularMaterialModule,
     ToastrModule,
+    SharedModule,
     CoreModule,
   ],
   providers: [ToastrService],

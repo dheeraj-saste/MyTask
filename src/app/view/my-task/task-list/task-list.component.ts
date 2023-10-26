@@ -64,6 +64,7 @@ export class TaskListComponent implements OnInit,OnChanges {
     const dialog = this.dialog.open(EditTaskDialogComponent, {
       height: '90vh',
       width: '70%',
+      disableClose: true
     });
   }
 

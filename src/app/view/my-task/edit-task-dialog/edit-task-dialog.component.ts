@@ -1,10 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { AddUserDialogComponent } from './add-user-dialog/add-user-dialog.component';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -14,17 +16,28 @@ import { MyTaskService } from 'src/app/shared/services/my-task.service';
 export class EditTaskDialogComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('datepicker') datepicker!: MatDatepicker<Date>;
+  @ViewChild('datepicker1') datepicker1!: MatDatepicker<Date>;
   leadList: any;
   editForm!: FormGroup;
+  userDetails: any;
+  usersSelected: any;
+  ccSelected: any;
+  seletedTab: any = 0;
+  userMembers: any;
+  ccMembers: any;
   constructor(
     private formBuilder: FormBuilder,
     private datepipe: DatePipe,
     private dialog: MatDialog,
-    private taskService: MyTaskService
+    private dialogRef: MatDialogRef<EditTaskDialogComponent>,
+    private taskService: MyTaskService,
+    private toastr: ToastrService
   ) {}
   currentDate: any = new Date();
   selectedDate: any = '';
   imageName: any = '';
+  imageExt: any;
+  isActive: boolean = true;
   leadParams = {
     From: 1,
     To: -1,
@@ -32,79 +45,176 @@ export class EditTaskDialogComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.getLeadList();
     this.createForm();
-
-    // this.editForm.get('date')?.valueChanges.subscribe((res) => {
-    //   let date: any = new Date(res);
-    //   if (res == '') {
-    //     return;
-    //   } else {
-    //     this.selectedDate = this.datepipe.transform(date, 'dd MMM yyyy');
-    //     console.log(res);
-    //     console.log(this.selectedDate);
-
-    //     // console.log(res);
-    //   }
-    // });
   }
   createForm() {
     this.editForm = this.formBuilder.group({
+      Id: [''],
       Title: ['', Validators.pattern('^[a-zA-Z]{1,19}$')],
-      Description: [''],
-      Images: [''],
-      CustomerName: [''],
-      Date: [''],
+
       Priority: [''],
-      Users: [''],
-      ccMembers: [''],
+      AssignedBy: [this.userDetails.UserId],
+      AssignedToUserId: [''],
+      AssignedDate: [''],
+      CompletedDate: [''],
+      Description: ['', Validators.required],
+      IntercomGroupIds: [[]],
+      IsActive: [this.isActive],
+      Latitude: [''],
+      Location: [''],
+      Longitude: [''],
+      Image: [''],
+      MultimediaData: [''],
+      MultimediaExtension: [''],
+      MultimediaFileName: [''],
+      MultimediaType: [''],
+      TaskEndDateDisplay: ['', Validators.required],
+      TaskEndDate: [''],
+      TaskDisplayOwners: [''],
+      TaskOwners: [''],
+      TaskStatus: [''],
+      UserDisplayIds: ['', Validators.required],
+      UserIds: [''],
+      LeadId: [''],
     });
+  }
+  tabChange(event: MatTabChangeEvent) {
+    this.seletedTab = event.index;
   }
   closeDatepicker() {
-    this.datepicker.close();
+    if (this.seletedTab == 0) {
+      this.datepicker.close();
+    } else if (this.seletedTab == 1) {
+      this.datepicker1.close();
+    }
   }
   getLeadList() {
-    this.taskService.getLeadList(this.leadParams).subscribe((res: any) => {
-      console.log(res);
+    this.taskService.getLeadList(this.leadParams).subscribe((res: any) => {});
+  }
+  addUser(control: string) {
+    let actions;
+    if (control == 'User') {
+      actions = {
+        userType: 'User',
+        users: this.userMembers,
+      };
+    } else if (control == 'Owner') {
+      actions = {
+        userType: 'Owner',
+        owner: this.ccMembers,
+      };
+    }
+
+    const dialog = this.dialog.open(AddUserDialogComponent, {
+      height: '89vh',
+      width: '60vh',
+      data: actions,
+    });
+    dialog.afterClosed().subscribe((res) => {
+      if (!res) return;
+      if (control == 'User') {
+        this.userMembers = res;
+        this.usersSelected = this.userMembers.length;
+        this.editForm.controls['UserDisplayIds'].patchValue(
+          this.usersSelected + ' Users'
+        );
+      } else if (control == 'Owner') {
+        this.ccMembers = res;
+        this.ccSelected = this.ccMembers.length;
+        this.editForm.controls['TaskDisplayOwners'].patchValue(
+          this.ccSelected + ' Users'
+        );
+      }
     });
   }
-  addUser() {
-    const dialog = this.dialog.open(AddUserDialogComponent,{height:'89vh',width:'60vh'});
-  }
-
   openFiles() {
     this.fileInput.nativeElement.click();
   }
 
   handleFileSelect(event: any) {
-    const file: File = event.files[0];
+    const file = event.files[0];
     if (file) {
-      console.log(file.size);
       let size = this.bytesToMegaBytes(file.size);
-      console.log(size);
 
       if (size <= 2) {
         this.imageName = file.name;
+
         const reader = new FileReader();
-        reader.onload = (e) => {
-          const base64String = reader.result as string;
-          console.log('Base64 Encoded Image:', base64String);
-          // You can use the base64String as needed, for example, sending it to a server.
+        reader.onload = (e: any) => {
+          const binaryData = e.target.result;
+          const base64 = btoa(binaryData);
+          this.editForm.patchValue({
+            Image: base64,
+            MultimediaData: base64,
+          });
         };
-        reader.readAsDataURL(file);
-      } else {
+        reader.readAsBinaryString(file);
       }
     }
-    console.log('Hello');
   }
 
   bytesToMegaBytes(value: any) {
-    console.log(value, 'value');
     let mb = value / 1024 / 1024;
-    console.log(mb, 'to mb');
+
     return mb;
   }
+  patchValue() {
+    let controls = this.editForm.controls;
+    let ext = this.imageName.split('.').pop();
+    let filename = this.imageName.split('.').shift();
+    if (
+      ext == 'jpeg' ||
+      ext == 'JPEG' ||
+      ext == 'jpg' ||
+      ext == 'JPG' ||
+      ext == 'png' ||
+      ext == 'PNG' ||
+      ext == 'svg' ||
+      ext == 'SVG'
+    ) {
+      controls['MultimediaType'].patchValue('I');
+    } else {
+      if (this.imageExt) {
+        controls['MultimediaType'].patchValue('D');
+      } else {
+        controls['MultimediaType'].patchValue('');
+      }
+    }
+
+    controls['MultimediaExtension'].patchValue(ext);
+    controls['MultimediaFileName'].patchValue(filename);
+
+    const userIdArray = this.userMembers.map((obj: any) => obj.UserId);
+
+    controls['UserIds'].patchValue(userIdArray);
+    if (this.ccMembers && this.ccMembers.length > 0) {
+      controls['TaskOwners'].patchValue(this.ccMembers);
+    } else {
+      controls['TaskOwners'].patchValue([]);
+    }
+
+    let date = this.editForm.get('TaskEndDateDisplay')?.value;
+    this.editForm.get('TaskEndDateDisplay')?.patchValue(date.toISOString());
+    date = this.datepipe.transform(date, 'dd MMM yyyy hh:mm a');
+    this.editForm.get('TaskEndDate')?.patchValue(date);
+  }
   onSubmit() {
-    console.log(this.editForm.controls['Date'].value);
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+    this.patchValue();
+    console.log(this.editForm.value);
+    this.taskService.addTask(this.editForm.value).subscribe((res) => {
+      if (res.Status == 200) {
+        this.toastr.success(res.Message);
+
+        this.dialogRef.close();
+      } else if (res.Status !== 200) {
+        this.toastr.error(res.Message);
+      }
+    });
   }
 }

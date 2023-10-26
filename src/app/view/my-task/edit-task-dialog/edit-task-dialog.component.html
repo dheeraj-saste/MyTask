@@ -4,7 +4,7 @@
 
 <mat-dialog-content class="pt-0">
   <div class="container">
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="tabChange($event)">
       <mat-tab label=" Assigned to Others">
         <div class="row ">
           <form [formGroup]="editForm">
@@ -13,7 +13,7 @@
               <input matInput type="text" formControlName="Title" />
             </mat-form-field>
             <mat-form-field class="col-12">
-              <mat-label>Description*</mat-label>
+              <mat-label>Description</mat-label>
               <input matInput type="text" formControlName="Description" />
             </mat-form-field>
             <mat-form-field class=" col-12">
@@ -24,7 +24,7 @@
                 [value]="imageName"
                 readonly
               />
-              <input formControlName="Images" hidden />
+              <input formControlName="Image" hidden />
               <input
                 type="file"
                 #fileInput
@@ -36,7 +36,7 @@
             <div class="d-flex justify-content-between">
               <mat-form-field class=" col-5">
                 <mat-label>Lead/Customer Name*</mat-label>
-                <mat-select formControlName="CustomerName">
+                <mat-select formControlName="LeadId">
                   <mat-form-field>
                     <input matInput placeholder="Search" type="text" />
                   </mat-form-field>
@@ -46,11 +46,11 @@
                 </mat-select>
               </mat-form-field>
               <mat-form-field class=" col-5">
-                <mat-label>Select Due Date*</mat-label>
+                <mat-label>Select Due Date</mat-label>
                 <input
                   matInput
                   type="text"
-                  formControlName="Date"
+                  formControlName="TaskEndDateDisplay"
                   [matDatepicker]="datepicker"
                   [min]="currentDate"
                   (click)="datepicker.open()"
@@ -62,30 +62,42 @@
                   [for]="datepicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #datepicker></mat-datepicker>
+                <input type="text" formControlName="TaskEndDate" hidden>
               </mat-form-field>
             </div>
             <mat-form-field class=" col-5">
               <mat-label>Select Priority</mat-label>
-              <input matInput type="text" formControlName="Priority" />
+              <mat-select formControlName="Priority"> 
+                <mat-option value="High">
+                  High Priority
+                </mat-option>
+                <mat-option value="Low">
+                  Low Priority
+                </mat-option>
+              </mat-select>
+              
             </mat-form-field>
             <mat-form-field class=" col-12">
-              <mat-label>Add Users*</mat-label>
+              <mat-label>Add Users</mat-label>
               <input
                 matInput
                 type="text"
-                (click)="addUser()"
-                formControlName="Users"
+                (click)="addUser('User')"
+                formControlName="UserDisplayIds"
                 readonly
               />
+              <input type="text" formControlName="UserIds" hidden>
             </mat-form-field>
             <mat-form-field class=" col-12">
-              <mat-label>Add CC Members</mat-label>
+              <mat-label>Add CC Members*</mat-label>
               <input
                 matInput
                 type="text"
-                formControlName="ccMembers"
+                (click)="addUser('Owner')"
+                formControlName="TaskDisplayOwners"
                 readonly
               />
+              <input type="text" formControlName="TaskOwners" hidden>
             </mat-form-field>
           </form>
         </div>
@@ -109,7 +121,7 @@
                 [value]="imageName"
                 readonly
               />
-              <input formControlName="Images" hidden />
+              <input formControlName="Image" hidden />
               <input
                 type="file"
                 #fileInput
@@ -121,7 +133,7 @@
             <div class="d-flex justify-content-between">
               <mat-form-field class=" col-5">
                 <mat-label>Lead/Customer Name*</mat-label>
-                <mat-select formControlName="CustomerName">
+                <mat-select formControlName="LeadId">
                   <mat-form-field>
                     <input matInput placeholder="Search" type="text" />
                   </mat-form-field>
@@ -131,11 +143,11 @@
                 </mat-select>
               </mat-form-field>
               <mat-form-field class=" col-5">
-                <mat-label>Select Due Date*</mat-label>
+                <mat-label>Select Due Date</mat-label>
                 <input
                   matInput
                   type="text"
-                  formControlName="Date"
+                  formControlName="TaskEndDateDisplay"
                   [matDatepicker]="datepicker1"
                   [min]="currentDate"
                   (click)="datepicker1.open()"
@@ -147,30 +159,30 @@
                   [for]="datepicker1"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #datepicker1></mat-datepicker>
+                <input type="text" formControlName="TaskEndDate" hidden>
               </mat-form-field>
             </div>
             <mat-form-field class=" col-5">
               <mat-label>Select Priority</mat-label>
-              <input matInput type="text" formControlName="Priority" />
-            </mat-form-field>
-            <mat-form-field class=" col-12">
-              <mat-label>Add Users*</mat-label>
-              <input
-                matInput
-                type="text"
-                (click)="addUser()"
-                formControlName="Users"
-                readonly
-              />
+              <mat-select formControlName="Priority"> 
+                <mat-option value="High">
+                  High Priority
+                </mat-option>
+                <mat-option value="Low">
+                  Low Priority
+                </mat-option>
+              </mat-select>
             </mat-form-field>
             <mat-form-field class=" col-12">
               <mat-label>Add CC Members</mat-label>
               <input
                 matInput
                 type="text"
-                formControlName="ccMembers"
+                (click)="addUser('Owner')"
+                formControlName="TaskDisplayOwners"
                 readonly
               />
+              <input type="text" formControlName="TaskOwners" hidden>
             </mat-form-field>
           </form>
         </div>

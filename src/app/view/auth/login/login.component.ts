@@ -39,6 +39,8 @@ export class LoginComponent implements OnInit {
     this.authService.login(params.Username, params.Password).subscribe(
       (res:any) => {
         if (res.userDetail.Status == 200) {
+          let userDetails = JSON.stringify(res.userDetail.data);
+          localStorage.setItem('userDetails', userDetails);
           let accessToken =
             'Basic ' + btoa(params.Username + ':' + params.Password);
           localStorage.setItem('accessToken', accessToken);

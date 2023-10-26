@@ -37,6 +37,6 @@ const route: Route[] = [
     FormsModule,
     CoreModule,
   ],
-  providers: [MyTaskService,DatePipe],
+  providers: [MyTaskService, DatePipe],
 })
 export class MyTaskModule {}

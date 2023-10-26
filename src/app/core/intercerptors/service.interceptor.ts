@@ -24,13 +24,13 @@ export class ServiceInterceptor implements HttpInterceptor {
           Authorization: `${token}`,
         },
       });
-      console.log(request)
+      
     }
 
     return next.handle(request).pipe(tap((res: any) => {
       
       if (res instanceof HttpResponse) {
-       console.log(res) 
+      
       }
     }));
   }

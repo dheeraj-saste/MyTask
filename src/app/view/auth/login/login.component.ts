@@ -48,10 +48,11 @@ export class LoginComponent implements OnInit {
           this.route.navigate(['/mytask']);
 
         } else if (res.userDetail.Status != 200) {
+          this.toastr.error('Something went Wrong')
         }
       },
       (err:any) => {
-        alert('Something went wrong');
+       
       }
     );
   }

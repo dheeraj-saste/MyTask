@@ -12,6 +12,13 @@ import { AddUserDialogComponent } from './edit-task-dialog/add-user-dialog/add-u
 import { DatePipe } from '@angular/common';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CcComponent } from './subComponent/cc/cc.component';
+import { MytaskComponent } from './subComponent/mytask/mytask.component';
+import { AssignedByMeComponent } from './subComponent/assigned-by-me/assigned-by-me.component';
+import { ArchiveListComponent } from './subComponent/archive-list/archive-list.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { PartialCompleteDialogComponent } from './subComponent/partial-complete-dialog/partial-complete-dialog.component';
+import { ViewCoverageComponent } from './view-coverage/view-coverage.component';
 
 const route: Route[] = [
   {
@@ -26,6 +33,13 @@ const route: Route[] = [
     EditTaskDialogComponent,
     DeleteTaskDialogComponent,
     AddUserDialogComponent,
+    CcComponent,
+    MytaskComponent,
+    AssignedByMeComponent,
+    ArchiveListComponent,
+    ConfirmationDialogComponent,
+    PartialCompleteDialogComponent,
+    ViewCoverageComponent,
   ],
   imports: [
     CommonModule,

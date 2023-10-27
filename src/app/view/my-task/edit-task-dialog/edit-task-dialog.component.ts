@@ -185,10 +185,16 @@ export class EditTaskDialogComponent implements OnInit {
 
     controls['MultimediaExtension'].patchValue(ext);
     controls['MultimediaFileName'].patchValue(filename);
+    if (this.seletedTab == 1) {
+      const userid = [this.userDetails.UserId];
 
-    const userIdArray = this.userMembers.map((obj: any) => obj.UserId);
+      controls['UserIds'].patchValue(userid);
+    } else {
+      const userIdArray = this.userMembers.map((obj: any) => obj.UserId);
 
-    controls['UserIds'].patchValue(userIdArray);
+      controls['UserIds'].patchValue(userIdArray);
+    }
+
     if (this.ccMembers && this.ccMembers.length > 0) {
       controls['TaskOwners'].patchValue(this.ccMembers);
     } else {
@@ -201,10 +207,15 @@ export class EditTaskDialogComponent implements OnInit {
     this.editForm.get('TaskEndDate')?.patchValue(date);
   }
   onSubmit() {
+    debugger;
+    if (this.seletedTab == 1) {
+      this.editForm.controls['UserDisplayIds'].disable();
+    }
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
       return;
     }
+
     this.patchValue();
     console.log(this.editForm.value);
     this.taskService.addTask(this.editForm.value).subscribe((res) => {

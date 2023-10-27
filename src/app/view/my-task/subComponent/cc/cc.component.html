@@ -1,0 +1,187 @@
+<div class="row">
+  <div class="col-12">
+    <mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="Title">
+        <mat-header-cell *matHeaderCellDef class="col-1">
+          Title
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1 highlight">
+          {{ element.Title }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="CustomerName">
+        <mat-header-cell *matHeaderCellDef class="col-1">
+          Customer Name
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1">
+          {{ element?.LeadName ? element?.LeadName : "-" }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="AssignedBy">
+        <mat-header-cell *matHeaderCellDef class="col-1">
+          Assigned By
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1">
+          {{ element.AssignedByUserName }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="AssignedDate">
+        <mat-header-cell *matHeaderCellDef class="col-2">
+          Assigned Date
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2">
+          {{ element.CreateDate }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="DueDate">
+        <mat-header-cell *matHeaderCellDef class="col-2">
+          Due Date
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2">
+          {{ element.TaskEndDate }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Priority">
+        <mat-header-cell *matHeaderCellDef class="col-1">
+          Priority
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1">
+          {{ element.Priority }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Status">
+        <mat-header-cell *matHeaderCellDef class="col-1">
+          Status
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let element"
+          class="col-1"
+          [ngStyle]="{
+            color:
+              element.CompletionPercentage == 100
+                ? 'green'
+                : element.CompletionPercentage == 0
+                ? 'orange'
+                : element.CompletionPercentage > 0 &&
+                  element.CompletionPercentage < 100
+                ? 'blue'
+                : ''
+          }"
+        >
+          <div *ngIf="element.CompletionPercentage == 0">Pending</div>
+          <div
+            *ngIf="
+              element.CompletionPercentage > 0 &&
+              element.CompletionPercentage < 100
+            "
+          >
+            Partial Complete ({{ element.CompletionPercentage }}%)
+          </div>
+          <div *ngIf="element.CompletionPercentage == 100">Completed</div>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="Action">
+        <mat-header-cell *matHeaderCellDef class="col-3"></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-3">
+          <button
+            (click)="archive(element.TaskId)"
+            mat-icon-button
+            color="primary"
+            matTooltip="Archive"
+            type="button"
+            [ngStyle]="{
+              visibility:
+                userId == element.AssignedByUserId ? 'visible' : 'hidden'
+            }"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/Archive.svg"
+            /></button
+          >&nbsp;
+          <button
+            (click)="accept(element.TaskId)"
+            mat-icon-button
+            color="primary"
+            matTooltip="Accept"
+            type="button"
+            [ngStyle]="{
+              visibility: element.TaskStatus == -1 ? 'visible' : 'hidden'
+            }"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/Accept.svg"
+            /></button
+          >&nbsp;
+          <button
+            (click)="viewCoverage(element.TaskId)"
+            mat-icon-button
+            color="primary"
+            matTooltip="View Task Coverage"
+            type="button"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/ViewTaskCoverage.svg"
+            /></button
+          >&nbsp;
+          <button
+            (click)="complete(element.TaskId)"
+            mat-icon-button
+            color="primary"
+            matTooltip="Complete"
+            type="button"
+            style="visibility: hidden"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/Complete.svg"
+            /></button
+          >&nbsp;
+          <button
+            (click)="
+              partialComplete(element.TaskId, element.CompletionPercentage)
+            "
+            mat-icon-button
+            color="primary"
+            matTooltip="Partial Complete"
+            type="button"
+            [ngStyle]="{
+              visibility:
+                element.TaskStatus != -1 &&
+                element.TaskStatus >= 0 && element.TaskStatus < 100 &&
+                element.TaskStatus != 100
+                  ? 'visible'
+                  : 'hidden'
+            }"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/PartialComplete.svg"
+            /></button
+          >&nbsp;
+          <button
+            (click)="deleted(element.TaskId)"
+            mat-icon-button
+            color="primary"
+            matTooltip="Delete"
+            type="button"
+            [ngStyle]="{
+              visibility:
+                userId == element.AssignedByUserId ? 'visible' : 'hidden'
+            }"
+          >
+            <img
+              class="action-btn"
+              src="assets/Images/Delete.svg"
+            /></button
+          >&nbsp;
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+  </div>
+</div>

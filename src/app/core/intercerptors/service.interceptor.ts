@@ -8,10 +8,11 @@ import {
 } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ServiceInterceptor implements HttpInterceptor {
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastr: ToastrService, private router :Router) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -30,8 +31,14 @@ export class ServiceInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(tap((res: any) => {
       
       if (res instanceof HttpResponse) {
-      
+        if (res.body.Status == 401) { 
+         
+          this.router.navigate(['/auth/login'])
+        }
       }
+    },
+      (error) => {
+      this.toastr.error('Something went Wrong')
     }));
   }
 }

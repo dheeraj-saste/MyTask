@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="kt-portlet__head-label">
+    <h3 mat-dialog-title>Partial Complete</h3>
+  </div>
+
+  <div class="kt-form">
+    <div class="col-12 margin-b-10">
+      <div
+        class="partialBlocks"
+        *ngFor="let partial of partialCompletePercent"
+        [class.isSelected]="
+          (data.TaskStatusValue == partial.Value && !isChanged) ||
+          selectedValue == partial.Value
+        "
+        (click)="taskValue(partial.Value)"
+      >
+        {{ partial.Value }}%
+      </div>
+    </div>
+
+    <div
+      class="kt-portlet__foot kt-portlet__no-border kt-portlet__foot--fit text-right"
+    >
+      <div class="kt-form__actions kt-form__actions--sm">
+        <button mat-raised-button (click)="onNoClick()">Cancel</button>&nbsp;
+        <button
+          mat-raised-button
+          (click)="onSubmit()"
+          [disabled]="viewLoading"
+          color="primary"
+        >
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

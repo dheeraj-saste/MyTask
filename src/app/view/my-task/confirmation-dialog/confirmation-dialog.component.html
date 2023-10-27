@@ -1,0 +1,15 @@
+<h3 mat-dialog-title>{{data?.title}}</h3>
+<div >
+<mat-dialog-content>
+
+    <div class="col-lg-12">
+        {{viewLoading ? data?.waitDescription : data?.description}}
+    </div>
+</mat-dialog-content>
+</div>
+<div >
+<mat-dialog-actions  class="d-flex align-items-center justify-content-end">
+    <button mat-raised-button  (click)="onNoClick()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onYesClick()" >{{data.btnName}}</button>
+  </mat-dialog-actions>
+</div>

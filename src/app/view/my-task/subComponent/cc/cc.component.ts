@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription, distinctUntilChanged, map, skip } from 'rxjs';
+import { Subscription, distinctUntilChanged, map, merge, skip, tap } from 'rxjs';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
-import { ViewCoverageComponent } from '../../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-cc',
   templateUrl: './cc.component.html',
   styleUrls: ['./cc.component.css']
 })
-export class CcComponent implements OnInit {
+export class CcComponent implements OnInit,AfterViewInit {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @Input('searchInput') searchInput!: ElementRef;
+  
   displayedColumns: string[] = [
     'Title',
     'CustomerName',
@@ -40,7 +42,7 @@ export class CcComponent implements OnInit {
     UserIds: [],
   };
   dataSource!: TaskDataSource;
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
@@ -62,6 +64,22 @@ export class CcComponent implements OnInit {
       });
     this.subscriptions.push(entitiesSubscription);
     this.dataSource.loadCC(1, 10, '', this.userId, false, [],'','')
+  }
+  ngAfterViewInit() {
+    const paginatorSubscriptions = merge(this.paginator.page)
+      .pipe(tap(() => this.loadCcPage()))
+      .subscribe();
+    this.subscriptions.push(paginatorSubscriptions);
+  }
+  loadCcPage() {
+    if (
+      this.paginator.pageIndex < 0 ||
+      this.paginator.pageIndex > this.paginator.length / this.paginator.pageSize
+    )
+      return;
+    let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
+    let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+    this.dataSource.loadCC(from, to, '', this.userId, false, [],'','');
   }
   archive(taskId: number) {
     let params = {

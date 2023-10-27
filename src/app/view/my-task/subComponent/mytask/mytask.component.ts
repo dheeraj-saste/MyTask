@@ -1,24 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
-import { distinctUntilChanged, map, skip } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  skip,
+  tap,
+} from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
-import { Subscription } from 'rxjs';
-import { ViewCoverageComponent } from '../../view-coverage/view-coverage.component';
+import { Subscription, fromEvent, merge } from 'rxjs';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-mytask',
   templateUrl: './mytask.component.html',
   styleUrls: ['./mytask.component.css'],
 })
-export class MytaskComponent implements OnInit {
- 
+export class MytaskComponent implements OnInit, AfterViewInit {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @Input('searchInput') searchInput!: ElementRef;
+
   displayedColumns: string[] = [
     'Title',
     'CustomerName',
@@ -47,7 +62,6 @@ export class MytaskComponent implements OnInit {
     UserIds: '',
   };
   dataSource!: TaskDataSource;
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
@@ -61,7 +75,7 @@ export class MytaskComponent implements OnInit {
     this.dataSource = new TaskDataSource(this.taskService);
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.userId = this.userDetails.UserId;
-    
+
     const entitiesSubscription = this.dataSource.entitySubject
       .pipe(skip(1), distinctUntilChanged())
       .subscribe((res) => {
@@ -83,7 +97,36 @@ export class MytaskComponent implements OnInit {
       ''
     );
   }
+  ngAfterViewInit() {
+    const paginatorSubscriptions = merge(this.paginator.page)
+      .pipe(tap(() => this.loadMyTaskPage()))
+      .subscribe();
+    this.subscriptions.push(paginatorSubscriptions);
+  }
+  loadMyTaskPage() {
+    if (
+      this.paginator.pageIndex < 0 ||
+      this.paginator.pageIndex > this.paginator.length / this.paginator.pageSize
+    )
+      return;
+    let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
+    let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
 
+    this.dataSource.loadMyTask(
+      from,
+      to,
+      '',
+      this.userId,
+      false,
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      ''
+    );
+  }
 
   unarchive(taskId: number) {
     let params = {
@@ -110,7 +153,20 @@ export class MytaskComponent implements OnInit {
           map((res) => {
             if (res.Status == 200) {
               this.toastr.success(params.successMessage);
-              this.dataSource.loadMyTask(1, 10, '', this.userId, true, '', '', '', '', '', '', '');
+              this.dataSource.loadMyTask(
+                1,
+                10,
+                '',
+                this.userId,
+                true,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+              );
             }
           })
         )
@@ -143,7 +199,20 @@ export class MytaskComponent implements OnInit {
           map((res: any) => {
             if (res.Status == 200) {
               this.toastr.success(params.successMessage);
-              this.dataSource.loadMyTask(1, 10, '', this.userId, false, '', '', '', '', '', '', '');
+              this.dataSource.loadMyTask(
+                1,
+                10,
+                '',
+                this.userId,
+                false,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+              );
             }
           })
         )
@@ -158,14 +227,26 @@ export class MytaskComponent implements OnInit {
         map((res) => {
           if (res.Status == 200) {
             this.toastr.success(_successMessage);
-            this.dataSource.loadMyTask(1, 10, '', this.userId, false, '', '', '', '', '', '', '');
+            this.dataSource.loadMyTask(
+              1,
+              10,
+              '',
+              this.userId,
+              false,
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              ''
+            );
           }
         })
       )
       .subscribe();
   }
   viewCoverage(taskId: number) {
-    
     this.matDialog.open(ViewCoverageComponent, {
       height: '250px',
       width: '500px',
@@ -198,7 +279,20 @@ export class MytaskComponent implements OnInit {
           map((res) => {
             if (res.Status == 200) {
               this.toastr.success(params.successMessage);
-              this.dataSource.loadMyTask(1, 10, '', this.userId, false, '', '', '', '', '', '', '');
+              this.dataSource.loadMyTask(
+                1,
+                10,
+                '',
+                this.userId,
+                false,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+              );
             }
           })
         )
@@ -231,7 +325,20 @@ export class MytaskComponent implements OnInit {
           map((res) => {
             if (res.Status == 200) {
               this.toastr.success(params.successMessage);
-              this.dataSource.loadMyTask(1, 10, '', this.userId, false, '', '', '', '', '', '', '');
+              this.dataSource.loadMyTask(
+                1,
+                10,
+                '',
+                this.userId,
+                false,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+              );
             }
           })
         )
@@ -252,7 +359,20 @@ export class MytaskComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res) => {
       if (!res) return;
       this.toastr.success(_successMessage);
-      this.dataSource.loadMyTask(1, 10, '', this.userId, false, '', '', '', '', '', '', '');
+      this.dataSource.loadMyTask(
+        1,
+        10,
+        '',
+        this.userId,
+        false,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        ''
+      );
     });
     console.log(taskId, taskPercentage);
   }

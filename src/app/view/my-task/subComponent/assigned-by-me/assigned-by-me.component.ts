@@ -1,23 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MyTaskService } from 'src/app/shared/services/my-task.service';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MyTaskService } from 'src/app/shared/services/my-task.service';
 
-import { distinctUntilChanged, map, skip } from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription, merge } from 'rxjs';
+import { distinctUntilChanged, map, skip, tap } from 'rxjs/operators';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
-import { Subscription } from 'rxjs';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
-import { ViewCoverageComponent } from '../../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-assigned-by-me',
   templateUrl: './assigned-by-me.component.html',
   styleUrls: ['./assigned-by-me.component.css'],
 })
-export class AssignedByMeComponent implements OnInit {
+export class AssignedByMeComponent implements OnInit,AfterViewInit {
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @Input('searchInput') searchInput!: ElementRef;
   displayedColumns: string[] = [
     'Title',
     'CustomerName',
@@ -44,7 +45,7 @@ export class AssignedByMeComponent implements OnInit {
     UserIds: [],
   };
   dataSource!: TaskDataSource;
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
@@ -68,6 +69,35 @@ export class AssignedByMeComponent implements OnInit {
     this.dataSource.loadAssignedByMe(
       1,
       10,
+      '',
+      this.userId,
+      false,
+      [],
+      '',
+      '',
+      '',
+      '',
+      '',
+      ''
+    );
+  }
+  ngAfterViewInit() {
+    const paginatorSubscriptions = merge(this.paginator.page)
+      .pipe(tap(() => this.loadAssignedByMePage()))
+      .subscribe();
+    this.subscriptions.push(paginatorSubscriptions);
+  }
+  loadAssignedByMePage() {
+    if (
+      this.paginator.pageIndex < 0 ||
+      this.paginator.pageIndex > this.paginator.length / this.paginator.pageSize
+    )
+      return;
+    let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
+    let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+    this.dataSource.loadAssignedByMe(
+      from,
+      to,
       '',
       this.userId,
       false,

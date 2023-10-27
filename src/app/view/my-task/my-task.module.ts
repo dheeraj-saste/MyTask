@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Route, RouterModule } from '@angular/router';
 import { AngularMaterialModule } from 'src/app/Angular-Material/angular-material.module';
-import { DeleteTaskDialogComponent } from './delete-task-dialog/delete-task-dialog.component';
+
 import { EditTaskDialogComponent } from './edit-task-dialog/edit-task-dialog.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { CoreModule } from 'src/app/core/core.module';
@@ -18,7 +18,7 @@ import { AssignedByMeComponent } from './subComponent/assigned-by-me/assigned-by
 import { ArchiveListComponent } from './subComponent/archive-list/archive-list.component';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { PartialCompleteDialogComponent } from './subComponent/partial-complete-dialog/partial-complete-dialog.component';
-import { ViewCoverageComponent } from './view-coverage/view-coverage.component';
+import { ViewCoverageComponent } from './subComponent/view-coverage/view-coverage.component';
 
 const route: Route[] = [
   {
@@ -31,7 +31,7 @@ const route: Route[] = [
   declarations: [
     TaskListComponent,
     EditTaskDialogComponent,
-    DeleteTaskDialogComponent,
+
     AddUserDialogComponent,
     CcComponent,
     MytaskComponent,

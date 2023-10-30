@@ -19,6 +19,8 @@ import { ArchiveListComponent } from './subComponent/archive-list/archive-list.c
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { PartialCompleteDialogComponent } from './subComponent/partial-complete-dialog/partial-complete-dialog.component';
 import { ViewCoverageComponent } from './subComponent/view-coverage/view-coverage.component';
+import { TaskInfoDialogComponent } from './subComponent/task-info-dialog/task-info-dialog.component';
+import { PreviewImagedialogComponent } from './subComponent/preview-imagedialog/preview-imagedialog.component';
 
 const route: Route[] = [
   {
@@ -40,6 +42,8 @@ const route: Route[] = [
     ConfirmationDialogComponent,
     PartialCompleteDialogComponent,
     ViewCoverageComponent,
+    TaskInfoDialogComponent,
+    PreviewImagedialogComponent,
   ],
   imports: [
     CommonModule,

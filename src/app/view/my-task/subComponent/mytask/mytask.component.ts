@@ -3,7 +3,9 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 
@@ -24,15 +26,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { Subscription, fromEvent, merge } from 'rxjs';
 import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
+import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
 
 @Component({
   selector: 'app-mytask',
   templateUrl: './mytask.component.html',
   styleUrls: ['./mytask.component.css'],
 })
-export class MytaskComponent implements OnInit, AfterViewInit {
+export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @Input('searchInput') searchInput!: ElementRef;
+  @Input('searchInput') searchInput: any;
 
   displayedColumns: string[] = [
     'Title',
@@ -45,22 +48,8 @@ export class MytaskComponent implements OnInit, AfterViewInit {
     'Action',
   ];
   myTasks: any = [];
+  searchText: any;
 
-  taskParams: any = {
-    From: 1,
-    FromDueDate: '',
-    IsArchive: false,
-    Priority: '',
-    SortByDueDate: '',
-    SortColumn: '',
-    SortOrder: '',
-    TaskStatus: '',
-    Title: '',
-    To: 10,
-    ToDueDate: '',
-    UserId: '',
-    UserIds: '',
-  };
   dataSource!: TaskDataSource;
   private subscriptions: Subscription[] = [];
   userDetails: any;
@@ -70,6 +59,20 @@ export class MytaskComponent implements OnInit, AfterViewInit {
     private matDialog: MatDialog,
     private toastr: ToastrService
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.['searchInput']) {
+      if (changes?.['searchInput']?.currentValue == '') {
+        this.searchText = '';
+        this.loadMyTaskPage();
+      } else if (
+        changes?.['searchInput']?.currentValue !== '' &&
+        changes?.['searchInput']?.currentValue !== undefined
+      ) {
+        this.searchText = changes?.['searchInput'].currentValue;
+        this.loadMyTaskPage();
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.dataSource = new TaskDataSource(this.taskService);
@@ -85,7 +88,7 @@ export class MytaskComponent implements OnInit, AfterViewInit {
     this.dataSource.loadMyTask(
       1,
       10,
-      '',
+    '',
       this.userId,
       false,
       '',
@@ -115,7 +118,7 @@ export class MytaskComponent implements OnInit, AfterViewInit {
     this.dataSource.loadMyTask(
       from,
       to,
-      '',
+      this.searchText,
       this.userId,
       false,
       '',
@@ -345,6 +348,16 @@ export class MytaskComponent implements OnInit, AfterViewInit {
         .subscribe();
     });
   }
+  displayDetails(taskId: any, isCC: boolean) {
+    const params = {
+      taskId: taskId,
+      isCC: isCC,
+    };
+    const dialogRef = this.matDialog.open(TaskInfoDialogComponent, {
+      data: params,
+      width: '1100px',
+    });
+  }
   partialComplete(taskId: number, taskPercentage: number) {
     const _successMessage = 'Partial Complete Task Updated Successfully';
     const params = {
@@ -374,6 +387,6 @@ export class MytaskComponent implements OnInit, AfterViewInit {
         ''
       );
     });
-    console.log(taskId, taskPercentage);
+    
   }
 }

@@ -5,7 +5,7 @@
         <mat-header-cell *matHeaderCellDef class="col-1">
           Title
         </mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-1 highlight">
+        <mat-cell *matCellDef="let element" class="col-1 highlight"  (click)=" displayDetails(element.TaskId, true)">
           {{ element.Title }}
         </mat-cell>
       </ng-container>

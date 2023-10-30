@@ -4,19 +4,39 @@
 
 <mat-dialog-content class="pt-0">
   <div class="container">
-    <mat-tab-group (selectedTabChange)="tabChange($event)">
+    <mat-tab-group
+      [selectedIndex]="seletedTab"
+      #tabGroup
+      (selectedTabChange)="tabChange(tabGroup, $event)"
+    >
       <mat-tab label=" Assigned to Others">
-        <div class="row ">
+        <div class="row">
           <form [formGroup]="editForm">
-            <mat-form-field class=" col-12">
-              <mat-label>Title*</mat-label>
+            <mat-form-field class="col-12">
+              <mat-label>Title</mat-label>
               <input matInput type="text" formControlName="Title" />
+              <mat-error
+                *ngIf="editForm.controls['Title']?.hasError('required')"
+                >Title is <strong>required</strong></mat-error
+              >
+              <mat-error
+                *ngIf="
+                  editForm.controls['Title']?.hasError('pattern') ||
+                  editForm.controls['Title']?.hasError('touched')
+                "
+                >Please enter the valid <strong>title</strong></mat-error
+              >
+              <mat-error
+                *ngIf="editForm.controls['Title']?.hasError('maxlength')"
+                >Valid till <strong>20 Characters</strong></mat-error
+              >
             </mat-form-field>
             <mat-form-field class="col-12">
               <mat-label>Description</mat-label>
               <input matInput type="text" formControlName="Description" />
+              <mat-error>Description is <strong>required</strong></mat-error>
             </mat-form-field>
-            <mat-form-field class=" col-12">
+            <mat-form-field class="col-12">
               <mat-label>Attach File*</mat-label>
               <input
                 matInput
@@ -33,8 +53,11 @@
                 hidden
               />
             </mat-form-field>
+            <div class="text-danger" *ngIf="sizeError">
+              The file size should be less than <strong>2 MB</strong>
+            </div>
             <div class="d-flex justify-content-between">
-              <mat-form-field class=" col-5">
+              <mat-form-field class="col-5">
                 <mat-label>Lead/Customer Name*</mat-label>
                 <mat-select formControlName="LeadId">
                   <mat-form-field>
@@ -45,7 +68,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <mat-form-field class=" col-5">
+              <mat-form-field class="col-5">
                 <mat-label>Select Due Date</mat-label>
                 <input
                   matInput
@@ -62,22 +85,19 @@
                   [for]="datepicker"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #datepicker></mat-datepicker>
-                <input type="text" formControlName="TaskEndDate" hidden>
+                <input type="text" formControlName="TaskEndDate" hidden />
+                <mat-error>Date is <strong>required</strong></mat-error>
               </mat-form-field>
             </div>
-            <mat-form-field class=" col-5">
+            <mat-form-field class="col-5">
               <mat-label>Select Priority</mat-label>
-              <mat-select formControlName="Priority"> 
-                <mat-option value="High">
-                  High Priority
-                </mat-option>
-                <mat-option value="Low">
-                  Low Priority
-                </mat-option>
+              <mat-select formControlName="Priority">
+                <mat-option value="High"> High Priority </mat-option>
+                <mat-option value="Low"> Low Priority </mat-option>
               </mat-select>
-              
+              <mat-error>Priority is <strong>required</strong></mat-error>
             </mat-form-field>
-            <mat-form-field class=" col-12">
+            <mat-form-field class="col-12">
               <mat-label>Add Users</mat-label>
               <input
                 matInput
@@ -86,9 +106,10 @@
                 formControlName="UserDisplayIds"
                 readonly
               />
-              <input type="text" formControlName="UserIds" hidden>
+              <input type="text" formControlName="UserIds" hidden />
+              <mat-error>At least select one <strong>User</strong></mat-error>
             </mat-form-field>
-            <mat-form-field class=" col-12">
+            <mat-form-field class="col-12">
               <mat-label>Add CC Members*</mat-label>
               <input
                 matInput
@@ -97,7 +118,7 @@
                 formControlName="TaskDisplayOwners"
                 readonly
               />
-              <input type="text" formControlName="TaskOwners" hidden>
+              <input type="text" formControlName="TaskOwners" hidden />
             </mat-form-field>
           </form>
         </div>
@@ -105,15 +126,32 @@
       <mat-tab label="Assigned For me ">
         <div class="row">
           <form [formGroup]="editForm">
-            <mat-form-field class=" col-12">
-              <mat-label>Title*</mat-label>
+            <mat-form-field class="col-12">
+              <mat-label>Title</mat-label>
               <input matInput type="text" formControlName="Title" />
+              <mat-error
+              *ngIf="editForm.controls['Title']?.hasError('required')"
+              >Title is <strong>required</strong></mat-error
+            >
+            <mat-error
+              *ngIf="
+                editForm.controls['Title']?.hasError('pattern') ||
+                editForm.controls['Title']?.hasError('touched')
+              "
+              >Please enter the valid <strong>title</strong></mat-error
+            >
+            <mat-error
+              *ngIf="editForm.controls['Title']?.hasError('maxlength')"
+              >Valid till <strong>20 Characters</strong></mat-error
+            >
+             
             </mat-form-field>
-            <mat-form-field class=" col-12">
-              <mat-label>Description*</mat-label>
+            <mat-form-field class="col-12">
+              <mat-label>Description</mat-label>
               <input matInput type="text" formControlName="Description" />
+              <mat-error>Description is <strong>required</strong></mat-error>
             </mat-form-field>
-            <mat-form-field class=" col-12">
+            <mat-form-field class="col-12">
               <mat-label>Attach File*</mat-label>
               <input
                 matInput
@@ -130,8 +168,11 @@
                 hidden
               />
             </mat-form-field>
+            <div class="text-danger" *ngIf="sizeError">
+              The file size should be less than <strong>2 MB</strong>
+            </div>
             <div class="d-flex justify-content-between">
-              <mat-form-field class=" col-5">
+              <mat-form-field class="col-5">
                 <mat-label>Lead/Customer Name*</mat-label>
                 <mat-select formControlName="LeadId">
                   <mat-form-field>
@@ -142,7 +183,7 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <mat-form-field class=" col-5">
+              <mat-form-field class="col-5">
                 <mat-label>Select Due Date</mat-label>
                 <input
                   matInput
@@ -159,21 +200,19 @@
                   [for]="datepicker1"
                 ></mat-datepicker-toggle>
                 <mat-datepicker #datepicker1></mat-datepicker>
-                <input type="text" formControlName="TaskEndDate" hidden>
+                <input type="text" formControlName="TaskEndDate" hidden />
+                <mat-error>Date is <strong>required</strong></mat-error>
               </mat-form-field>
             </div>
-            <mat-form-field class=" col-5">
+            <mat-form-field class="col-5">
               <mat-label>Select Priority</mat-label>
-              <mat-select formControlName="Priority"> 
-                <mat-option value="High">
-                  High Priority
-                </mat-option>
-                <mat-option value="Low">
-                  Low Priority
-                </mat-option>
+              <mat-select formControlName="Priority">
+                <mat-option value="High"> High Priority </mat-option>
+                <mat-option value="Low"> Low Priority </mat-option>
               </mat-select>
+              <mat-error>Priority is <strong>required</strong></mat-error>
             </mat-form-field>
-            <mat-form-field class=" col-12">
+            <mat-form-field class="col-12">
               <mat-label>Add CC Members</mat-label>
               <input
                 matInput
@@ -182,7 +221,7 @@
                 formControlName="TaskDisplayOwners"
                 readonly
               />
-              <input type="text" formControlName="TaskOwners" hidden>
+              <input type="text" formControlName="TaskOwners" hidden />
             </mat-form-field>
           </form>
         </div>

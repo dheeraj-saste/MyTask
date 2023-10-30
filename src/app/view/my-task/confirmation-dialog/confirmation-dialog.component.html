@@ -9,7 +9,7 @@
 </div>
 <div >
 <mat-dialog-actions  class="d-flex align-items-center justify-content-end">
-    <button mat-raised-button  (click)="onNoClick()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="onYesClick()" >{{data.btnName}}</button>
+    <button mat-raised-button  (click)="onNoClick(false)">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onYesClick(true)" >{{data.btnName}}</button>
   </mat-dialog-actions>
 </div>

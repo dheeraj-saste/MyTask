@@ -5,9 +5,11 @@ import { AngularMaterialModule } from '../Angular-Material/angular-material.modu
 
 
 
+
 @NgModule({
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    
   ],
   imports: [
     CommonModule,

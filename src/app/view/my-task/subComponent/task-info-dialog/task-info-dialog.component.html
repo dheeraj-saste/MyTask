@@ -1,0 +1,90 @@
+<div class="header">
+<h3 mat-dialog-title>Task Details</h3>
+</div>
+<div>
+    <mat-dialog-content>
+        <div class=" col-12 kt-padding-b-10">
+            <label class="font-weight-500">Title</label>
+            <p class="font-weight-300">{{taskDetails?.Title}}</p>
+        </div>
+        <div class="col-12 kt-padding-b-10">
+            <label class="font-weight-500">Description</label>
+            <p class="font-weight-300">{{taskDetails?.Description ? taskDetails?.Description:'-' }}</p>
+        </div>
+        <div class="col-12 kt-padding-b-10">
+            <div class="row">
+                <div class="col-8">
+                    <label class="font-weight-500">Attached File</label>
+                    <p class="font-weight-500">{{taskDetails?.MultimediaName }}
+                        <span (click)="showPreviewImage(MultimediaLink)"
+                            *ngIf="taskDetails?.MultimediaName != '-' && taskDetails?.MultimediaType == 'I'" class="view right"
+                            download>View</span>
+                        <span
+                            *ngIf="taskDetails?.MultimediaName != '-' && taskDetails?.MultimediaType == 'D'"
+                            ><a href="{{MultimediaLink}}" target="_blank"
+                                download>View</a></span>
+                    </p>
+                </div>
+                <div class="col-4">
+                    <label class="font-weight-500">Priority</label>
+                    <p class="font-weight-300">{{taskDetails?.Priority}} Priority</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 kt-padding-b-10">
+            <div class="row">
+                <div class="col-8">
+                    <label class="font-weight-500">Assigned Date</label>
+                    <p class="font-weight-300">{{taskDetails?.AssignedDate }}</p>
+                </div>
+                <div class="col-4">
+                    <label class="font-weight-500">Due Date</label>
+                    <p class="font-weight-300">{{taskDetails?.TaskEndDate }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 kt-padding-b-10">
+            <div class="row">
+                <div class="col-8">
+                    <label class="font-weight-500">Assigned To</label>
+                    <p  class="font-weight-300">
+                        {{taskDetails?.AssignedToUserCount}} <span
+                            *ngIf="taskDetails?.AssignedToUserCount <= 1">&nbsp;User</span><span
+                            *ngIf="taskDetails?.AssignedToUserCount > 1">&nbsp;Users</span></p>
+                </div>
+                <div class="col-4" *ngIf="taskDetails?.TaskOwnerCount >= 1;else noCC">
+                    <label>CC Members</label>
+                    <p  class="font-weight-300">
+                        {{taskDetails?.TaskOwnerCount}} <span
+                            *ngIf="taskDetails?.TaskOwnerCount <= 1">&nbsp;User</span><span
+                            *ngIf="taskDetails?.TaskOwnerCount > 1">&nbsp;Users</span>
+                    </p>
+                </div>
+            </div>
+            <ng-template #noCC>
+                <div class="col-4">
+                    <label class="font-weight-500">Customer Name</label>
+                    <p class="highlight font-weight-300"
+                        >
+                        {{taskDetails?.LeadName ? taskDetails?.LeadName:'-' }}</p>
+                </div>
+            </ng-template>
+        </div>
+        <div class="col-12 kt-padding-b-10">
+            <div class="row">
+                <div class="col-8" *ngIf="taskDetails?.TaskOwnerCount >= 1">
+                    <label class="font-weight-500">Customer Name</label>
+                    <p class="highlight font-weight-300"
+                        >
+                        {{taskDetails?.LeadName ? taskDetails?.LeadName:'-' }}</p>
+                </div>
+                <div class="col-4">
+                    <label class="font-weight-500">Mobile No</label>
+                    <p class="font-weight-300">{{taskDetails?.MobileNo ? taskDetails?.MobileNo:'-' }}</p>
+                </div>
+            </div>
+        </div>
+
+        </mat-dialog-content>
+
+</div>

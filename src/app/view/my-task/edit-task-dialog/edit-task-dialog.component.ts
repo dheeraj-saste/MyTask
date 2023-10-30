@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
@@ -7,6 +7,7 @@ import { MatDatepicker } from '@angular/material/datepicker';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -17,12 +18,17 @@ export class EditTaskDialogComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('datepicker') datepicker!: MatDatepicker<Date>;
   @ViewChild('datepicker1') datepicker1!: MatDatepicker<Date>;
+  @ViewChild('tabGroup') tabGroup!: MatTabChangeEvent;
+
   leadList: any;
   editForm!: FormGroup;
   userDetails: any;
   usersSelected: any;
+  tabChangeCount: number = 0;
   ccSelected: any;
   seletedTab: any = 0;
+  sizeError:any
+  previousSelected: any;
   userMembers: any;
   ccMembers: any;
   constructor(
@@ -36,6 +42,7 @@ export class EditTaskDialogComponent implements OnInit {
   currentDate: any = new Date();
   selectedDate: any = '';
   imageName: any = '';
+  Title: any;
   imageExt: any;
   isActive: boolean = true;
   leadParams = {
@@ -48,13 +55,14 @@ export class EditTaskDialogComponent implements OnInit {
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.getLeadList();
     this.createForm();
+    this.Title = this.editForm.controls['Title'];
   }
   createForm() {
     this.editForm = this.formBuilder.group({
       Id: [''],
-      Title: ['', Validators.pattern('^[a-zA-Z]{1,19}$')],
+      Title: ['', [  Validators.required,Validators.pattern('^[a-zA-Z]+$'),Validators.maxLength(20)]],
 
-      Priority: [''],
+      Priority: ['',Validators.required],
       AssignedBy: [this.userDetails.UserId],
       AssignedToUserId: [''],
       AssignedDate: [''],
@@ -80,8 +88,33 @@ export class EditTaskDialogComponent implements OnInit {
       LeadId: [''],
     });
   }
-  tabChange(event: MatTabChangeEvent) {
-    this.seletedTab = event.index;
+
+  tabChange(tab: any, event: MatTabChangeEvent) {
+
+
+    let params = {
+      title: 'Confirmation Dialog',
+      description: 'Do you want to Change this Tab?',
+      waitDescription: '',
+      btnName: 'Ok',
+    };
+
+    const dialogref = this.dialog.open(ConfirmationDialogComponent, {
+      data: params,
+    });
+    dialogref.afterClosed().subscribe((res) => {
+    
+      // if (!res) return;
+      if (res == true) {
+        this.seletedTab = event.index;
+        this.tabChangeCount = 0;
+      } else {
+        // tab.seletedTab = this.seletedTab
+        tab.selectedIndex = this.seletedTab;
+        this.tabChangeCount++;
+      
+      }
+    });
   }
   closeDatepicker() {
     if (this.seletedTab == 0) {
@@ -139,6 +172,8 @@ export class EditTaskDialogComponent implements OnInit {
       let size = this.bytesToMegaBytes(file.size);
 
       if (size <= 2) {
+        this.sizeError = false;
+
         this.imageName = file.name;
 
         const reader = new FileReader();
@@ -151,6 +186,9 @@ export class EditTaskDialogComponent implements OnInit {
           });
         };
         reader.readAsBinaryString(file);
+      }
+      else {
+        this.sizeError = true;
       }
     }
   }
@@ -207,7 +245,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.editForm.get('TaskEndDate')?.patchValue(date);
   }
   onSubmit() {
-    debugger;
+    ;
     if (this.seletedTab == 1) {
       this.editForm.controls['UserDisplayIds'].disable();
     }
@@ -217,7 +255,7 @@ export class EditTaskDialogComponent implements OnInit {
     }
 
     this.patchValue();
-    console.log(this.editForm.value);
+    
     this.taskService.addTask(this.editForm.value).subscribe((res) => {
       if (res.Status == 200) {
         this.toastr.success(res.Message);

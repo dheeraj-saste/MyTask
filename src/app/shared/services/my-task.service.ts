@@ -86,4 +86,21 @@ export class MyTaskService {
         map(res => res)
       );
   }
+  getTaskDetails(taskId: number): Observable<any> {
+    return this.http.get('api/Task/UserTaskDetails?taskId=' + taskId)
+      .pipe(
+        map(res => res)
+      );
+  }
+  getName(name:any) :any{
+    let filename = (/[^/]*$/.exec(name))
+    let updated_name = filename && filename.length ? filename[0] : '';
+    return updated_name;
+  }
+  getExtension(extention: any) :any{
+    let fileextention = (/[^.]*$/.exec(extention));
+    let updated_fileExtention = fileextention && fileextention.length ? fileextention[0] : '';
+    return updated_fileExtention;
+  }
+
 }

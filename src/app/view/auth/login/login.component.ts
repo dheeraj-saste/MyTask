@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -37,23 +36,22 @@ export class LoginComponent implements OnInit {
     };
 
     this.authService.login(params.Username, params.Password).subscribe(
-      (res:any) => {
-        if (res.userDetail.Status == 200) {
+      (res: any) => {
+        if (res?.userDetail?.Status == 200) {
           let userDetails = JSON.stringify(res.userDetail.data);
           localStorage.setItem('userDetails', userDetails);
           let accessToken =
             'Basic ' + btoa(params.Username + ':' + params.Password);
           localStorage.setItem('accessToken', accessToken);
-          this.toastr.success('Login Successfully')
+          this.toastr.success('Login Successfully');
           this.route.navigate(['/mytask']);
-
-        } else if (res.userDetail.Status != 200) {
-          this.toastr.error('Something went Wrong')
+        } else if (res?.userDetail?.Status != 200 || !res.success) {
+          this.toastr.error(res.errormessage);
+        } else {
+          this.toastr.error('Something went Wrong');
         }
       },
-      (err:any) => {
-       
-      }
+      (err: any) => {}
     );
   }
 }

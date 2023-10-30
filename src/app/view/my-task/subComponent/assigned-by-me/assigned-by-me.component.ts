@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 
@@ -10,15 +18,16 @@ import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
+import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
 
 @Component({
   selector: 'app-assigned-by-me',
   templateUrl: './assigned-by-me.component.html',
   styleUrls: ['./assigned-by-me.component.css'],
 })
-export class AssignedByMeComponent implements OnInit,AfterViewInit {
+export class AssignedByMeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @Input('searchInput') searchInput!: ElementRef;
+  @Input('searchInput') searchInput!: any;
   displayedColumns: string[] = [
     'Title',
     'CustomerName',
@@ -30,22 +39,12 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
     'Action',
   ];
   myTasks: any = [];
+  from: any;
+  searchText: any = '';
+  to: any;
 
-  taskParams: any = {
-    From: 1,
-    FromDueDate: '',
-    IsArchive: false,
-    Priority: '',
-    SortByDueDate: '',
-    TaskStatus: '',
-    Title: '',
-    To: 10,
-    ToDueDate: '',
-    UserId: '',
-    UserIds: [],
-  };
   dataSource!: TaskDataSource;
-  
+
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
@@ -93,12 +92,13 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
       this.paginator.pageIndex > this.paginator.length / this.paginator.pageSize
     )
       return;
-    let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
-    let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+    this.from = this.paginator.pageIndex * this.paginator.pageSize + 1;
+    this.to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
+
     this.dataSource.loadAssignedByMe(
-      from,
-      to,
-      '',
+      this.from,
+      this.to,
+      this.searchText,
       this.userId,
       false,
       [],
@@ -109,6 +109,20 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
       '',
       ''
     );
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.['searchInput']) {
+      if (changes?.['searchInput']?.currentValue == '') {
+        this.searchText = '';
+        this.loadAssignedByMePage();
+      } else if (
+        changes?.['searchInput']?.currentValue !== '' &&
+        changes?.['searchInput']?.currentValue !== undefined
+      ) {
+        this.searchText = changes?.['searchInput'].currentValue;
+        this.loadAssignedByMePage();
+      }
+    }
   }
   archive(taskId: number) {
     let params = {
@@ -149,7 +163,7 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
                 '',
                 '',
                 ''
-              )
+              );
             }
           })
         )
@@ -177,20 +191,28 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
               '',
               '',
               ''
-            )
+            );
           }
         })
       )
       .subscribe();
   }
-    viewCoverage(taskId: number) {
-    
+  viewCoverage(taskId: number) {
     this.matDialog.open(ViewCoverageComponent, {
       height: '250px',
       width: '500px',
       data: taskId,
     });
-
+  }
+  displayDetails(taskId: any, isCC: boolean) {
+    const params = {
+      taskId: taskId,
+      isCC: isCC,
+    };
+    const dialogRef = this.matDialog.open(TaskInfoDialogComponent, {
+      data: params,
+      width: '1100px',
+    });
   }
   deleted(taskId: number) {
     let params = {
@@ -231,7 +253,7 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
                 '',
                 '',
                 ''
-              )
+              );
             }
           })
         )
@@ -277,7 +299,7 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
                 '',
                 '',
                 ''
-              )
+              );
             }
           })
         )
@@ -311,8 +333,8 @@ export class AssignedByMeComponent implements OnInit,AfterViewInit {
         '',
         '',
         ''
-      )
+      );
     });
-    console.log(taskId, taskPercentage);
+    
   }
 }

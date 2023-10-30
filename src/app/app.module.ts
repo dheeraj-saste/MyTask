@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { AuthGuard } from './core/guards/authenticate.guard';
 import { ReverseGuard } from './core/guards/reverse.guard';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
+import { NgHttpLoaderModule } from 'ng-http-loader';
+
 
 
 
@@ -28,6 +30,7 @@ import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
     AngularMaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgHttpLoaderModule.forRoot(),
     FormsModule,
   ],
   exports:[AngularMaterialModule],
@@ -44,4 +47,6 @@ import { ServiceInterceptor } from './core/intercerptors/service.interceptor';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+
+}

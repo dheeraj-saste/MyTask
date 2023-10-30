@@ -14,16 +14,26 @@ export class ConfirmationDialogComponent implements OnInit {
    
   ) {}
   ngOnInit(): void {
-  console.log(this.data)
+
   }
-  onNoClick() {
-    this.matDialogRef.close()
+  onNoClick(data: boolean) {
+    if (this.data.btnName == 'Ok') {
+      this.matDialogRef.close(data);
+    } else {
+      
+      this.matDialogRef.close()
+    }
   }
-  onYesClick(): void {
+  onYesClick(data:boolean): void {
+    if (this.data.btnName == 'Ok') {
+      this.matDialogRef.close(data)
+    } else {
+      this.viewLoading = true;
+      setTimeout(() => {
+        this.matDialogRef.close(true); 
+      }, 2500);
+      
+    }
 		
-		this.viewLoading = true;
-		setTimeout(() => {
-			this.matDialogRef.close(true); 
-		}, 2500);
 	}
 }

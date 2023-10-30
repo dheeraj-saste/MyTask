@@ -4,6 +4,7 @@ import {
   ElementRef,
   Input,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +15,7 @@ import { distinctUntilChanged, map, skip, tap } from 'rxjs/operators';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
+import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
 
 @Component({
   selector: 'app-archive-list',
@@ -36,19 +38,12 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
   ];
   myTasks: any = [];
 
-  taskParams: any = {
-    From: 1,
-    IsArchive: true,
-    Title: '',
-    To: 10,
-    UserId: '',
-    UserIds: [],
-  };
   dataSource!: TaskDataSource;
 
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
+  searchText: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,
@@ -82,7 +77,38 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
       return;
     let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
     let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
-    this.dataSource.loadArchive(from, to, '', this.userId, true, []);
+    this.dataSource.loadArchive(
+      from,
+      to,
+      this.searchText,
+      this.userId,
+      true,
+      []
+    );
+  }
+  displayDetails(taskId: any, isCC: boolean) {
+    const params = {
+      taskId: taskId,
+      isCC: isCC,
+    };
+    const dialogRef = this.matDialog.open(TaskInfoDialogComponent, {
+      data: params,
+      width: '1100px',
+    });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.['searchInput']) {
+      if (changes?.['searchInput']?.currentValue == '') {
+        this.searchText = '';
+        this.loadArchiveListPage();
+      } else if (
+        changes?.['searchInput']?.currentValue !== '' &&
+        changes?.['searchInput']?.currentValue !== undefined
+      ) {
+        this.searchText = changes?.['searchInput'].currentValue;
+        this.loadArchiveListPage();
+      }
+    }
   }
 
   unarchive(taskId: number) {

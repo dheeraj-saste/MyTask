@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   Input,
   OnChanges,
   OnInit,
@@ -13,20 +12,14 @@ import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmat
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
 
 import { MatDialog } from '@angular/material/dialog';
-import { MyTaskService } from 'src/app/shared/services/my-task.service';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  skip,
-  tap,
-} from 'rxjs/operators';
-import { ToastrService } from 'ngx-toastr';
 import { MatPaginator } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription, merge } from 'rxjs';
+import { distinctUntilChanged, map, skip, tap } from 'rxjs/operators';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
-import { Subscription, fromEvent, merge } from 'rxjs';
-import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
+import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-mytask',
@@ -88,7 +81,7 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.dataSource.loadMyTask(
       1,
       10,
-    '',
+      '',
       this.userId,
       false,
       '',
@@ -387,6 +380,5 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
         ''
       );
     });
-    
   }
 }

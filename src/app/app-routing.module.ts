@@ -17,9 +17,6 @@ const routes: Routes = [
     canActivate: [authenticateGuard],
   },
 
-  // {
-  //   path: '**',component:
-  // }
 ];
 
 @NgModule({

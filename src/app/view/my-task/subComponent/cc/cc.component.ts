@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   Input,
   OnChanges,
   OnInit,
@@ -22,9 +21,9 @@ import {
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { MyTaskService } from 'src/app/shared/services/my-task.service';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
-import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
 import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-cc',
@@ -257,6 +256,5 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
       this.toastr.success(_successMessage);
       this.dataSource.loadCC(1, 10, '', this.userId, false, [], '', '');
     });
-    
   }
 }

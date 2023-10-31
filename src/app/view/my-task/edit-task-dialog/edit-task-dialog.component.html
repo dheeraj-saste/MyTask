@@ -130,21 +130,20 @@
               <mat-label>Title</mat-label>
               <input matInput type="text" formControlName="Title" />
               <mat-error
-              *ngIf="editForm.controls['Title']?.hasError('required')"
-              >Title is <strong>required</strong></mat-error
-            >
-            <mat-error
-              *ngIf="
-                editForm.controls['Title']?.hasError('pattern') ||
-                editForm.controls['Title']?.hasError('touched')
-              "
-              >Please enter the valid <strong>title</strong></mat-error
-            >
-            <mat-error
-              *ngIf="editForm.controls['Title']?.hasError('maxlength')"
-              >Valid till <strong>20 Characters</strong></mat-error
-            >
-             
+                *ngIf="editForm.controls['Title']?.hasError('required')"
+                >Title is <strong>required</strong></mat-error
+              >
+              <mat-error
+                *ngIf="
+                  editForm.controls['Title']?.hasError('pattern') ||
+                  editForm.controls['Title']?.hasError('touched')
+                "
+                >Please enter the valid <strong>title</strong></mat-error
+              >
+              <mat-error
+                *ngIf="editForm.controls['Title']?.hasError('maxlength')"
+                >Valid till <strong>20 Characters</strong></mat-error
+              >
             </mat-form-field>
             <mat-form-field class="col-12">
               <mat-label>Description</mat-label>

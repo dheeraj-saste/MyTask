@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Spinkit } from 'ng-http-loader';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +7,5 @@ import { Spinkit } from 'ng-http-loader';
 })
 export class AppComponent {
   title = "My_Task"
-  public spinkit = Spinkit; 
+
 }

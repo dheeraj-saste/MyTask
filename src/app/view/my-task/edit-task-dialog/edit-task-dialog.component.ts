@@ -27,7 +27,7 @@ export class EditTaskDialogComponent implements OnInit {
   tabChangeCount: number = 0;
   ccSelected: any;
   seletedTab: any = 0;
-  sizeError:any
+  sizeError: any;
   previousSelected: any;
   userMembers: any;
   ccMembers: any;
@@ -42,7 +42,7 @@ export class EditTaskDialogComponent implements OnInit {
   currentDate: any = new Date();
   selectedDate: any = '';
   imageName: any = '';
-  Title: any;
+
   imageExt: any;
   isActive: boolean = true;
   leadParams = {
@@ -55,14 +55,20 @@ export class EditTaskDialogComponent implements OnInit {
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.getLeadList();
     this.createForm();
-    this.Title = this.editForm.controls['Title'];
   }
   createForm() {
     this.editForm = this.formBuilder.group({
       Id: [''],
-      Title: ['', [  Validators.required,Validators.pattern('^[a-zA-Z]+$'),Validators.maxLength(20)]],
+      Title: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-Z ]+$'),
+          Validators.maxLength(20),
+        ],
+      ],
 
-      Priority: ['',Validators.required],
+      Priority: ['', Validators.required],
       AssignedBy: [this.userDetails.UserId],
       AssignedToUserId: [''],
       AssignedDate: [''],
@@ -90,8 +96,6 @@ export class EditTaskDialogComponent implements OnInit {
   }
 
   tabChange(tab: any, event: MatTabChangeEvent) {
-
-
     let params = {
       title: 'Confirmation Dialog',
       description: 'Do you want to Change this Tab?',
@@ -103,7 +107,6 @@ export class EditTaskDialogComponent implements OnInit {
       data: params,
     });
     dialogref.afterClosed().subscribe((res) => {
-    
       // if (!res) return;
       if (res == true) {
         this.seletedTab = event.index;
@@ -112,7 +115,6 @@ export class EditTaskDialogComponent implements OnInit {
         // tab.seletedTab = this.seletedTab
         tab.selectedIndex = this.seletedTab;
         this.tabChangeCount++;
-      
       }
     });
   }
@@ -186,8 +188,7 @@ export class EditTaskDialogComponent implements OnInit {
           });
         };
         reader.readAsBinaryString(file);
-      }
-      else {
+      } else {
         this.sizeError = true;
       }
     }
@@ -245,7 +246,6 @@ export class EditTaskDialogComponent implements OnInit {
     this.editForm.get('TaskEndDate')?.patchValue(date);
   }
   onSubmit() {
-    ;
     if (this.seletedTab == 1) {
       this.editForm.controls['UserDisplayIds'].disable();
     }
@@ -255,7 +255,7 @@ export class EditTaskDialogComponent implements OnInit {
     }
 
     this.patchValue();
-    
+
     this.taskService.addTask(this.editForm.value).subscribe((res) => {
       if (res.Status == 200) {
         this.toastr.success(res.Message);

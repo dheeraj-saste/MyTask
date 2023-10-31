@@ -1,17 +1,9 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.component';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-task-list',

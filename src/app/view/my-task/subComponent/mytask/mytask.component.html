@@ -6,7 +6,11 @@
           <mat-header-cell *matHeaderCellDef class="col-1">
             Title
           </mat-header-cell>
-          <mat-cell *matCellDef="let element" class="highlight col-1" (click)=" displayDetails(element.TaskId, false)">
+          <mat-cell
+            *matCellDef="let element"
+            class="highlight col-1"
+            (click)="displayDetails(element.TaskId, false)"
+          >
             {{ element.Title }}
           </mat-cell>
         </ng-container>
@@ -20,7 +24,7 @@
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="AssignedBy">
-          <mat-header-cell *matHeaderCellDef class="col-1"> 
+          <mat-header-cell *matHeaderCellDef class="col-1">
             Assigned By
           </mat-header-cell>
           <mat-cell *matCellDef="let element" class="col-1">
@@ -112,10 +116,7 @@
                     : 'hidden'
               }"
             >
-              <img
-                class="action-btn"
-                src="assets/Images/Archive.svg"
-              /></button
+              <img class="action-btn" src="assets/Images/Archive.svg" /></button
             >&nbsp;
             <button
               (click)="accept(element.TaskId)"
@@ -130,10 +131,7 @@
                     : 'hidden'
               }"
             >
-              <img
-                class="action-btn"
-                src="assets/Images/Accept.svg"
-              /></button
+              <img class="action-btn" src="assets/Images/Accept.svg" /></button
             >&nbsp;
             <button
               (click)="viewCoverage(element.TaskId)"
@@ -168,10 +166,7 @@
                     : 'hidden'
               }"
             >
-              <img
-                class="action-btn"
-                src="assets/Images/Delete.svg"
-              /></button
+              <img class="action-btn" src="assets/Images/Delete.svg" /></button
             >&nbsp;
             <button
               (click)="complete(element.TaskId)"
@@ -223,6 +218,10 @@
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
     </div>
-    <mat-paginator [pageSize]="10" [length]="dataSource.paginatorTotal$ | async" [showFirstLastButtons]="true"></mat-paginator>
+    <mat-paginator
+      [pageSize]="10"
+      [length]="dataSource.paginatorTotal$ | async"
+      [showFirstLastButtons]="true"
+    ></mat-paginator>
   </div>
 </div>

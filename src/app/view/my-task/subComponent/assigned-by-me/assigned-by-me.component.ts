@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   Input,
   OnInit,
   SimpleChanges,
@@ -16,9 +15,9 @@ import { Subscription, merge } from 'rxjs';
 import { distinctUntilChanged, map, skip, tap } from 'rxjs/operators';
 import { TaskDataSource } from 'src/app/shared/datasource/myTask.datasource';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
-import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 import { PartialCompleteDialogComponent } from '../partial-complete-dialog/partial-complete-dialog.component';
 import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.component';
+import { ViewCoverageComponent } from '../view-coverage/view-coverage.component';
 
 @Component({
   selector: 'app-assigned-by-me',
@@ -335,6 +334,5 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
         ''
       );
     });
-    
   }
 }

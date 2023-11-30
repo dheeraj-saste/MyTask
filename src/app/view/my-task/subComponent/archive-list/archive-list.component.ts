@@ -44,6 +44,7 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
   userDetails: any;
   userId: any;
   searchText: any;
+  debounceTimeout: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,
@@ -106,7 +107,12 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
         changes?.['searchInput']?.currentValue !== undefined
       ) {
         this.searchText = changes?.['searchInput'].currentValue;
-        this.loadArchiveListPage();
+        if (this.debounceTimeout) {
+          clearTimeout(this.debounceTimeout);
+        }
+        this.debounceTimeout = setTimeout(() => {
+          this.loadArchiveListPage();
+        }, 1000);
       }
     }
   }

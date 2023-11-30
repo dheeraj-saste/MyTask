@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Route, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -6,6 +6,7 @@ import { AngularMaterialModule } from 'src/app/Angular-Material/angular-material
 import { LoginComponent } from './login/login.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CurrencyformatPipe } from 'src/app/core/pipes/currencyformat.pipe';
 
 const route: Route[] = [
   {
@@ -39,6 +40,6 @@ const route: Route[] = [
     SharedModule,
     CoreModule,
   ],
-  providers: [ToastrService],
+  providers: [ToastrService,CurrencyformatPipe,CurrencyPipe],
 })
 export class AuthModule {}

@@ -42,7 +42,7 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
   ];
   myTasks: any = [];
   searchText: any;
-
+  debounceTimeout: any;
   dataSource!: TaskDataSource;
   private subscriptions: Subscription[] = [];
   userDetails: any;
@@ -62,7 +62,13 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
         changes?.['searchInput']?.currentValue !== undefined
       ) {
         this.searchText = changes?.['searchInput'].currentValue;
-        this.loadMyTaskPage();
+        if (this.debounceTimeout) {
+          clearTimeout(this.debounceTimeout);
+        }
+        this.debounceTimeout = setTimeout(() => {
+          
+          this.loadMyTaskPage();
+        }, 1000);
       }
     }
   }

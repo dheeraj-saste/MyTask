@@ -11,6 +11,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  a: any = 10000;
+  b: any = 100000;
+  c: any = 1000000;
   constructor(
     private route: Router,
     private formBuilder: FormBuilder,
@@ -18,6 +21,7 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService
   ) {}
   ngOnInit(): void {
+
     this.createForm();
   }
 

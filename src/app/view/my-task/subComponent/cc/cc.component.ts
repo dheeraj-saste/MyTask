@@ -48,7 +48,7 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
   searchText: any;
 
   dataSource!: TaskDataSource;
-
+  debounceTimeout: any;
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
@@ -67,7 +67,13 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
         changes?.['searchInput']?.currentValue !== undefined
       ) {
         this.searchText = changes?.['searchInput'].currentValue;
-        this.loadCcPage();
+        if (this.debounceTimeout) {
+          clearTimeout(this.debounceTimeout);
+        }
+        this.debounceTimeout = setTimeout(() => {
+          
+          this.loadCcPage();
+        }, 1000);
       }
     }
   }

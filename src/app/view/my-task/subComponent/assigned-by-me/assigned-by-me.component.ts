@@ -41,7 +41,7 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
   from: any;
   searchText: any = '';
   to: any;
-
+  debounceTimeout: any;
   dataSource!: TaskDataSource;
 
   private subscriptions: Subscription[] = [];
@@ -119,7 +119,13 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
         changes?.['searchInput']?.currentValue !== undefined
       ) {
         this.searchText = changes?.['searchInput'].currentValue;
-        this.loadAssignedByMePage();
+        if (this.debounceTimeout) {
+          clearTimeout(this.debounceTimeout);
+        }
+        this.debounceTimeout = setTimeout(() => {
+          this.loadAssignedByMePage();
+        }, 1000);
+        
       }
     }
   }

@@ -49,7 +49,6 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
-  debounceTimeout: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,

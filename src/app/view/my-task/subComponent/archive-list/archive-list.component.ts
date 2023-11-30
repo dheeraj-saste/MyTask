@@ -45,7 +45,6 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
   userDetails: any;
   userId: any;
   searchText: any;
-  debounceTimeout: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,

@@ -49,7 +49,6 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
   searchText: any;
   debounceTimeout: any;
   dataSource!: TaskDataSource;
-  debounceTimeout: any;
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;

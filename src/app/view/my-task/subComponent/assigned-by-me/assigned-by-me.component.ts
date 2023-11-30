@@ -27,6 +27,8 @@ import { ViewCoverageComponent } from '../view-coverage/view-coverage.component'
 export class AssignedByMeComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @Input('searchInput') searchInput!: any;
+  @Input('currentTab') currenttab!: any;
+  
   displayedColumns: string[] = [
     'Title',
     'CustomerName',
@@ -47,6 +49,7 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
+  debounceTimeout: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,
@@ -54,6 +57,7 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.currenttab == 2) {
     this.dataSource = new TaskDataSource(this.taskService);
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.userId = this.userDetails.UserId;
@@ -64,6 +68,9 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
         this.myTasks = res;
       });
     this.subscriptions.push(entitiesSubscription);
+    
+    
+      
     this.dataSource.loadAssignedByMe(
       1,
       10,
@@ -77,7 +84,8 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
       '',
       '',
       ''
-    );
+      );
+    }
   }
   ngAfterViewInit() {
     const paginatorSubscriptions = merge(this.paginator.page)
@@ -125,7 +133,11 @@ export class AssignedByMeComponent implements OnInit, AfterViewInit {
         this.debounceTimeout = setTimeout(() => {
           this.loadAssignedByMePage();
         }, 1000);
-        
+      }
+    }
+    if (changes?.['currentTab']) {
+      if (changes?.['currentTab'].currentValue == 2) {
+        this.ngOnInit();
       }
     }
   }

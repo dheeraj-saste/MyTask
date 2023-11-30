@@ -29,6 +29,7 @@ import { ViewCoverageComponent } from '../view-coverage/view-coverage.component'
 export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @Input('searchInput') searchInput: any;
+  @Input('currentTab') currentTab: any;
 
   displayedColumns: string[] = [
     'Title',
@@ -47,12 +48,14 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
   private subscriptions: Subscription[] = [];
   userDetails: any;
   userId: any;
+  debounceTimeout: any;
   constructor(
     private taskService: MyTaskService,
     private matDialog: MatDialog,
     private toastr: ToastrService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
+    
     if (changes?.['searchInput']) {
       if (changes?.['searchInput']?.currentValue == '') {
         this.searchText = '';
@@ -83,21 +86,26 @@ export class MytaskComponent implements OnInit, AfterViewInit, OnChanges {
       .subscribe((res) => {
         this.myTasks = res;
       });
-    this.subscriptions.push(entitiesSubscription);
-    this.dataSource.loadMyTask(
-      1,
-      10,
-      '',
-      this.userId,
-      false,
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      ''
-    );
+      this.subscriptions.push(entitiesSubscription);
+      console.log(this.currentTab,'my');
+      
+      // if (this.currentTab == 0) {
+    
+      this.dataSource.loadMyTask(
+        1,
+        10,
+        '',
+        this.userId,
+        false,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        ''
+      );
+    // }
   }
   ngAfterViewInit() {
     const paginatorSubscriptions = merge(this.paginator.page)

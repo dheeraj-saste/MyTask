@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -9,6 +9,7 @@ import { EditTaskDialogComponent } from '../edit-task-dialog/edit-task-dialog.co
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
+  changeDetection :ChangeDetectionStrategy.OnPush
 })
 export class TaskListComponent implements OnInit {
   @ViewChild('search') search: any;
@@ -18,7 +19,7 @@ export class TaskListComponent implements OnInit {
   archiveSearch: any;
   assignedByMe: any;
   searching = new FormControl();
-  constructor(private router: Router, private dialog: MatDialog) {}
+  constructor(private router: Router, private dialog: MatDialog,private  chref:ChangeDetectorRef) {}
 
   searchingInput(event: any) {
     this.search.value = event.target.value;
@@ -34,7 +35,10 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+
+  }
 
   EditTask() {
     const dialog = this.dialog.open(EditTaskDialogComponent, {
@@ -44,8 +48,10 @@ export class TaskListComponent implements OnInit {
     });
   }
   tabChange(event: MatTabChangeEvent) {
+    console.log('Tab changed:', event.tab.textLabel);
     this.seletedTab = event.index;
     this.searching.setValue('');
+    this.chref.detectChanges();
   }
 
   clear() {

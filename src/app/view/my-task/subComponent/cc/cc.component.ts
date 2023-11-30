@@ -33,6 +33,7 @@ import { ViewCoverageComponent } from '../view-coverage/view-coverage.component'
 export class CcComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @Input('searchInput') searchInput: any;
+  @Input('currentTab') currentTab: any;
 
   displayedColumns: string[] = [
     'Title',
@@ -46,7 +47,7 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
   ];
   myTasks: any = [];
   searchText: any;
-
+  debounceTimeout: any;
   dataSource!: TaskDataSource;
   debounceTimeout: any;
   private subscriptions: Subscription[] = [];
@@ -58,6 +59,7 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
     private toastr: ToastrService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
+  
     if (changes?.['searchInput']) {
       if (changes?.['searchInput']?.currentValue == '') {
         this.searchText = '';
@@ -76,9 +78,15 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
         }, 1000);
       }
     }
+    if (changes?.['currentTab']) {
+      if (changes?.['currentTab'].currentValue == 1) {
+        this.ngOnInit();
+      }
+    }
   }
 
   ngOnInit(): void {
+    if (this.currentTab == 1) {
     this.dataSource = new TaskDataSource(this.taskService);
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.userId = this.userDetails.UserId;
@@ -89,7 +97,11 @@ export class CcComponent implements OnInit, AfterViewInit, OnChanges {
         this.myTasks = res;
       });
     this.subscriptions.push(entitiesSubscription);
-    this.dataSource.loadCC(1, 10, '', this.userId, false, [], '', '');
+    console.log(this.currentTab,'cc')
+    
+      
+      this.dataSource.loadCC(1, 10, '', this.userId, false, [], '', '');
+    }
   }
   ngAfterViewInit() {
     const paginatorSubscriptions = merge(this.paginator.page)

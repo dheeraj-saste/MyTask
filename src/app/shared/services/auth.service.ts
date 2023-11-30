@@ -9,6 +9,6 @@ export class AuthService {
   baseUrl: any = environment.baseUrl;
 
   login(Username:any,Password:any) {
-    return this.http.post<any>(this.baseUrl + 'api/account/authenticate', { Username, Password });
+    return this.http.post<any>('api/account/authenticate', { Username, Password });
   }
 }

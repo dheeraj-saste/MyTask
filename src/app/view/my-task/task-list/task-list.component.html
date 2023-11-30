@@ -22,31 +22,26 @@
   <div class="padding">
     <mat-tab-group (selectedTabChange)="tabChange($event)">
       <mat-tab>
-        <ng-template mat-tab-label> My Task </ng-template>
-        <ng-template matTabContent>
-          <app-mytask [searchInput]="myTaskSearch"></app-mytask>
-        </ng-template>
-      </mat-tab>
+        <ng-template mat-tab-label>
+          My Task
+      </ng-template>
 
-      <mat-tab label="CC">
-        <ng-template mat-tab-label> CC </ng-template>
-        <ng-template matTabContent>
-          <app-cc [searchInput]="ccSearch"></app-cc>
-        </ng-template>
+        <app-mytask [searchInput]="myTaskSearch" [currentTab]="seletedTab"></app-mytask>
       </mat-tab>
 
       <mat-tab>
-        <ng-template mat-tab-label> Assigned By Me </ng-template>
-        <ng-template matTabContent>
-          <app-assigned-by-me [searchInput]="assignedByMe"></app-assigned-by-me>
-        </ng-template>
+        <ng-template mat-tab-label>
+          CC
+      </ng-template>
+        <app-cc [searchInput]="ccSearch" [currentTab]="seletedTab"></app-cc>
+      </mat-tab>
+
+      <mat-tab label="Assigned By Me">
+        <app-assigned-by-me [searchInput]="assignedByMe" [currentTab]="seletedTab"></app-assigned-by-me>
       </mat-tab>
 
       <mat-tab label="Archive List">
-        <ng-template mat-tab-label> Archive List </ng-template>
-        <ng-template matTabContent>
-          <app-archive-list [searchInput]="archiveSearch"></app-archive-list>
-        </ng-template>
+        <app-archive-list [searchInput]="archiveSearch" [currentTab]="seletedTab"></app-archive-list>
       </mat-tab>
     </mat-tab-group>
   </div>

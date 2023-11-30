@@ -24,7 +24,8 @@ import { TaskInfoDialogComponent } from '../task-info-dialog/task-info-dialog.co
 })
 export class ArchiveListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @Input('searchInput') searchInput!: ElementRef;
+  @Input('searchInput') searchInput!: any;
+  @Input('currentTab') currentTab!: any;
 
   displayedColumns: string[] = [
     'Title',
@@ -37,7 +38,7 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
     'Action',
   ];
   myTasks: any = [];
-
+  debounceTimeout: any;
   dataSource!: TaskDataSource;
 
   private subscriptions: Subscription[] = [];
@@ -52,6 +53,7 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.currentTab == 3) {
     this.dataSource = new TaskDataSource(this.taskService);
     this.userDetails = JSON.parse(localStorage.getItem('userDetails') || '');
     this.userId = this.userDetails.UserId;
@@ -62,7 +64,11 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
         this.myTasks = res;
       });
     this.subscriptions.push(entitiesSubscription);
-    this.dataSource.loadArchive(1, 10, '', this.userId, true, []);
+    console.log(this.currentTab, ' archive');
+    
+      
+      this.dataSource.loadArchive(1, 10, '', this.userId, true, []);
+    }
   }
   ngAfterViewInit() {
     const paginatorSubscriptions = merge(this.paginator.page)
@@ -78,14 +84,16 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
       return;
     let from = this.paginator.pageIndex * this.paginator.pageSize + 1;
     let to = (this.paginator.pageIndex + 1) * this.paginator.pageSize;
-    this.dataSource.loadArchive(
-      from,
-      to,
-      this.searchText,
-      this.userId,
-      true,
-      []
-    );
+  
+      this.dataSource.loadArchive(
+        from,
+        to,
+        this.searchText,
+        this.userId,
+        true,
+        []
+      );
+   
   }
   displayDetails(taskId: any, isCC: boolean) {
     const params = {
@@ -113,6 +121,11 @@ export class ArchiveListComponent implements OnInit, AfterViewInit {
         this.debounceTimeout = setTimeout(() => {
           this.loadArchiveListPage();
         }, 1000);
+      }
+    }
+    if (changes?.['currentTab']) {
+      if (changes?.['currentTab'].currentValue == 2) {
+        this.ngOnInit();
       }
     }
   }

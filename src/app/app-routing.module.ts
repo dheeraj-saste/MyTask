@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'mytask',
     loadChildren: () =>
-      import('./view/my-task/my-task.module').then((m) => m.MyTaskModule),
+      import('./view/view.module').then(m=>m.ViewModule),
     canActivate: [authenticateGuard],
   },
 

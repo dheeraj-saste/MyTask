@@ -26,6 +26,12 @@ const route: Route[] = [
   {
     path: '',
     component: TaskListComponent,
+    children: [
+			{
+				path: '',
+				component: TaskListComponent
+			}
+		]
   },
 ];
 

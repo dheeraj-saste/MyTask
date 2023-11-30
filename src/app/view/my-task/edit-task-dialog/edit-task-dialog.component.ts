@@ -203,16 +203,7 @@ export class EditTaskDialogComponent implements OnInit {
     let controls = this.editForm.controls;
     let ext = this.imageName.split('.').pop();
     let filename = this.imageName.split('.').shift();
-    if (
-      ext == 'jpeg' ||
-      ext == 'JPEG' ||
-      ext == 'jpg' ||
-      ext == 'JPG' ||
-      ext == 'png' ||
-      ext == 'PNG' ||
-      ext == 'svg' ||
-      ext == 'SVG'
-    ) {
+    if (['jpeg', 'jpg', 'png', 'svg'].includes(ext.toLowerCase())) {
       controls['MultimediaType'].patchValue('I');
     } else {
       if (this.imageExt) {
